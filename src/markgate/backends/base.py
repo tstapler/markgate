@@ -63,5 +63,14 @@ class Backend(ABC):
         """Interactive OAuth / token setup wizard for this backend."""
 
     @abstractmethod
+    def get_remote_version(self, doc_id: str) -> str:
+        """
+        Return an opaque version token for the current remote document state.
+        - Google Docs: returns doc['revisionId'] (opaque string)
+        - Confluence: returns str(page['version']['number']) (monotonic integer as string)
+        Used by == comparison to detect remote changes between syncs.
+        """
+
+    @abstractmethod
     def validate_config(self, config: dict) -> None:
         """Raise ValueError with a clear message if config is missing required keys."""

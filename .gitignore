@@ -36,6 +36,8 @@ config.yaml
 # State files
 .sync_state.json
 conflicts.log
+.markgate-state.json
+.markgate-base/
 
 # IDE
 .vscode/

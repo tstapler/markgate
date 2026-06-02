@@ -15,11 +15,24 @@ from google.auth.transport.requests import Request
 logger = logging.getLogger(__name__)
 
 # Google Drive API scopes
-SCOPES = [
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/documents',
-    'https://www.googleapis.com/auth/spreadsheets.readonly',
+PULL_SCOPES = [
+    "https://www.googleapis.com/auth/documents.readonly",
+    "https://www.googleapis.com/auth/drive.readonly",
+    "https://www.googleapis.com/auth/spreadsheets.readonly",
 ]
+
+PUSH_SCOPES = [
+    "https://www.googleapis.com/auth/documents",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/spreadsheets.readonly",
+]
+
+# Default to read-write scopes so push works out of the box.
+# Note: existing tokens created with documents.readonly are insufficient for push.
+DEFAULT_SCOPES = PUSH_SCOPES
+
+# Legacy alias — kept so any code that references SCOPES still works.
+SCOPES = DEFAULT_SCOPES
 
 
 class GoogleAuthenticator:

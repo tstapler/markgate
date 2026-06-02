@@ -101,6 +101,55 @@ class GoogleDocsClient:
         # Set default socket timeout
         socket.setdefaulttimeout(TIMEOUT)
 
+    def _with_backoff(self, fn, max_retries: int = 5, max_backoff: int = 64):
+        """Execute fn() with truncated exponential backoff on HTTP 429 errors."""
+        import time
+        import random
+        for n in range(max_retries):
+            try:
+                return fn()
+            except HttpError as e:
+                if e.resp.status == 429:
+                    wait = min(2 ** n + random.random(), max_backoff)
+                    time.sleep(wait)
+                else:
+                    raise
+        raise RuntimeError("Max retries exceeded after rate limit backoff")
+
+    def get_document(self, doc_id: str) -> dict:
+        """
+        Get full Google Docs document JSON (including body structure).
+
+        Args:
+            doc_id: Google Doc ID
+
+        Returns:
+            dict: Full document resource including body.content
+        """
+        return self._with_backoff(
+            lambda: self.docs_service.documents().get(documentId=doc_id).execute()
+        )
+
+    def batch_update(self, doc_id: str, requests: list) -> dict:
+        """
+        Submit a list of batchUpdate requests to a Google Doc.
+
+        Applies exponential backoff on HTTP 429 (rate limit) errors.
+
+        Args:
+            doc_id: Google Doc ID
+            requests: List of request dicts (e.g. insertText, deleteContentRange)
+
+        Returns:
+            dict: batchUpdate response
+        """
+        return self._with_backoff(
+            lambda: self.docs_service.documents().batchUpdate(
+                documentId=doc_id,
+                body={"requests": requests},
+            ).execute()
+        )
+
     def get_doc_content(self, doc_id: str) -> str:
         """
         Get Google Doc content as HTML with retry mechanism
