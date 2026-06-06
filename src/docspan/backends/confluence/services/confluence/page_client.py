@@ -6,18 +6,15 @@ including creating, updating, getting, and deleting pages.
 """
 
 import json
-import logging
-from enum import Enum
-from typing import Any, Dict, List, Optional, Union, Literal
-from copy import deepcopy
+from typing import Any, Dict, List, Literal, Optional
 
 from docspan.backends.confluence.config.models import ConfluenceConfig
 from docspan.backends.confluence.models.page import ConfluencePage
 from docspan.backends.confluence.services.confluence.base_client import (
+    ArchivedPageError,
     BaseConfluenceClient,
     ConfluenceApiError,
-    ArchivedPageError,
-    PageNotFoundError
+    PageNotFoundError,
 )
 
 
@@ -311,7 +308,7 @@ class PageClient(BaseConfluenceClient):
             try:
                 page_data = self.get_page(page.id)
                 page.version = page_data.get("version", {}).get("number", 0)
-            except (PageNotFoundError, ArchivedPageError) as e:
+            except (PageNotFoundError, ArchivedPageError):
                 # These errors should propagate up
                 raise
             except Exception as e:
@@ -716,7 +713,7 @@ class PageClient(BaseConfluenceClient):
         try:
             error_body = response.json() if response.content else None
             self.logger.error(f"Delete failed for page {page_id}: status={response.status_code}, body={error_body}")
-        except:
+        except Exception:
             self.logger.error(f"Delete failed for page {page_id}: status={response.status_code}, text={response.text[:200]}")
 
         # Attempt to use archive endpoint for archived pages
@@ -812,8 +809,8 @@ class PageClient(BaseConfluenceClient):
                 self.logger.error(f"Source page {page_id} does not exist: {e}")
                 raise ValueError(f"Source page {page_id} does not exist or is not accessible")
                 
-            current_version = page_data.get("version", {}).get("number", 0)
-            space_key = page_data.get("space", {}).get("key")
+            page_data.get("version", {}).get("number", 0)
+            page_data.get("space", {}).get("key")
             title = page_data.get("title")
             
             # Check if page already has the correct parent
@@ -969,7 +966,7 @@ class PageClient(BaseConfluenceClient):
 
         if editor_type == "unknown":
             self.logger.debug(f"Page '{title}' (ID: {page_id}) has unknown editor type (likely transitional state with both formats but no metadata)")
-            self.logger.debug(f"Treating as legacy page and attempting migration...")
+            self.logger.debug("Treating as legacy page and attempting migration...")
 
         self.logger.debug(f"Page '{title}' (ID: {page_id}) is using legacy editor — attempting auto-migration")
 
@@ -984,7 +981,7 @@ class PageClient(BaseConfluenceClient):
             # Check if page already has ADF content (transitional state)
             existing_adf = body.get("atlas_doc_format")
             if existing_adf and isinstance(existing_adf, dict):
-                self.logger.info(f"Page already has ADF content, will update metadata only")
+                self.logger.info("Page already has ADF content, will update metadata only")
                 adf_content = existing_adf
             else:
                 # Get storage format content and convert to ADF
@@ -1044,7 +1041,7 @@ class PageClient(BaseConfluenceClient):
                     endpoint=f"content/{page_id}/property/editor",
                     json_data=property_data
                 )
-                self.logger.info(f"✅ Updated editor property to v2")
+                self.logger.info("✅ Updated editor property to v2")
             except Exception as prop_error:
                 # Property doesn't exist, create it
                 self.logger.debug(f"Property doesn't exist, creating it: {prop_error}")
@@ -1053,7 +1050,7 @@ class PageClient(BaseConfluenceClient):
                     endpoint=f"content/{page_id}/property",
                     json_data=property_data
                 )
-                self.logger.info(f"✅ Created editor property with value v2")
+                self.logger.info("✅ Created editor property with value v2")
 
             result["migrated"] = True
             result["page_data"] = updated_page
@@ -1157,9 +1154,7 @@ class PageClient(BaseConfluenceClient):
             ADFConversionError: If content cannot be converted to valid ADF
         """
         from docspan.backends.confluence.services.confluence.base_client import (
-            UnsupportedADFFeatureError,
             ADFConversionError,
-            InvalidADFError
         )
 
         if isinstance(content, dict):
@@ -1209,8 +1204,7 @@ class PageClient(BaseConfluenceClient):
             InvalidADFError: If ADF structure is invalid
         """
         from docspan.backends.confluence.services.confluence.base_client import (
-            UnsupportedADFFeatureError,
-            InvalidADFError
+            InvalidADFError,
         )
 
         # Check basic structure
@@ -1267,7 +1261,9 @@ class PageClient(BaseConfluenceClient):
         Raises:
             UnsupportedADFFeatureError: If node contains unsupported types
         """
-        from docspan.backends.confluence.services.confluence.base_client import UnsupportedADFFeatureError
+        from docspan.backends.confluence.services.confluence.base_client import (
+            UnsupportedADFFeatureError,
+        )
 
         node_type = node.get("type")
 

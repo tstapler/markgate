@@ -7,6 +7,7 @@ Handles conversion between Google Docs and Markdown formats
 import logging
 import re
 import sys
+
 from markdownify import markdownify as md
 
 logger = logging.getLogger(__name__)
@@ -280,7 +281,7 @@ class DocumentConverter:
                             if class_level > 0:
                                 item.level = class_level
                     all_items.extend(parser.items)
-                except:
+                except Exception:
                     pass
 
             if not all_items:
@@ -354,7 +355,7 @@ class DocumentConverter:
                                     # Use class level as the authoritative level
                                     item.level = block_info['level']
                             all_items.extend(parser.items)
-                        except:
+                        except Exception:
                             pass
 
                     if all_items:
@@ -375,7 +376,7 @@ class DocumentConverter:
                             result_parts.append(f'<ul>{build_nested_html(parser.items)}</ul>')
                         else:
                             result_parts.append(group_blocks[0]['block'])
-                    except:
+                    except Exception:
                         result_parts.append(group_blocks[0]['block'])
 
                     last_pos = group_blocks[0]['end']
