@@ -3,8 +3,6 @@
 import json
 import os
 
-import pytest
-
 from docspan.core.state import MappingState, SyncState, sha256_of_content, sha256_of_file
 
 # ─────────────────────────────────────────────────────────────────────────────

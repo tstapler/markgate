@@ -8,11 +8,13 @@ page content in ADF (Atlassian Document Format) for analysis and comparison.
 import json
 import logging
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from dataclasses import dataclass, field
 
-from docspan.backends.confluence.services.confluence.base_client import BaseConfluenceClient, ConfluenceApiError
+from docspan.backends.confluence.services.confluence.base_client import (
+    BaseConfluenceClient,
+)
 
 
 @dataclass
@@ -268,7 +270,7 @@ class SpaceCrawler:
         if not footer_results and not inline_results:
             return
 
-        lines = [f"# Comments\n"]
+        lines = ["# Comments\n"]
 
         if footer_results:
             lines.append(f"## Footer Comments ({len(footer_results)})\n")

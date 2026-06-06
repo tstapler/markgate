@@ -5,7 +5,7 @@ This module provides specialized functionality for working with Confluence label
 including adding, retrieving, and removing labels.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from docspan.backends.confluence.config.models import ConfluenceConfig
 from docspan.backends.confluence.services.confluence.base_client import BaseConfluenceClient

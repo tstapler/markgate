@@ -7,22 +7,21 @@ maintaining backward compatibility with the original monolithic client.
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import requests
 
 from docspan.backends.confluence.config.models import ConfluenceConfig
 from docspan.backends.confluence.models.page import ConfluencePage
-from docspan.backends.confluence.services.confluence.base_client import (
-    ConfluenceApiError, 
-    ArchivedPageError,
-    PageNotFoundError,
-    RestrictedPageError
-)
-from docspan.backends.confluence.services.confluence.page_client import PageClient
 from docspan.backends.confluence.services.confluence.attachment_client import AttachmentClient
+from docspan.backends.confluence.services.confluence.base_client import (
+    ArchivedPageError,
+    ConfluenceApiError,
+    PageNotFoundError,
+)
 from docspan.backends.confluence.services.confluence.comment_client import ConfluenceCommentClient
 from docspan.backends.confluence.services.confluence.label_client import LabelClient
+from docspan.backends.confluence.services.confluence.page_client import PageClient
 from docspan.backends.confluence.services.confluence.space_client import SpaceClient
 
 

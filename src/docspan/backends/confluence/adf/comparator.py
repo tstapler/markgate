@@ -7,14 +7,14 @@ to identify discrepancies and issues in the conversion process.
 
 import difflib
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
 from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from docspan.backends.confluence.adf.parser import AdfDocument, AdfNode, AdfNodeType, AdfParser
-from docspan.backends.confluence.markdown.parser import MarkdownParser
-from docspan.backends.confluence.markdown.ast import MarkdownNode
 from docspan.backends.confluence.adf.converter import AdfConverter
+from docspan.backends.confluence.adf.parser import AdfDocument, AdfNodeType, AdfParser
+from docspan.backends.confluence.markdown.ast import MarkdownNode
+from docspan.backends.confluence.markdown.parser import MarkdownParser
 
 
 class DifferenceType(Enum):
@@ -304,7 +304,7 @@ class MarkdownAdfComparator:
             report.add_difference(
                 DifferenceType.TEXT_MISMATCH,
                 "text_content",
-                f"similarity: 100%",
+                "similarity: 100%",
                 f"similarity: {similarity * 100:.1f}%",
                 severity="high" if similarity < 0.8 else "medium",
                 description=f"Text content similarity is {similarity * 100:.1f}%",

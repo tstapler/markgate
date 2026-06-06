@@ -5,9 +5,9 @@ from __future__ import annotations
 import os
 import pathlib
 from typing import Literal, Optional
+
 import yaml
 from pydantic import BaseModel
-
 
 CONFIG_FILENAME = "markgate.yaml"
 

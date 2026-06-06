@@ -4,7 +4,7 @@ from __future__ import annotations
 import difflib
 from typing import List, Tuple
 
-from docspan.backends.google_docs.docs_structure_parser import DocsParagraphNode, TextSpan
+from docspan.backends.google_docs.docs_structure_parser import DocsParagraphNode
 
 
 def _utf16_len(text: str) -> int:

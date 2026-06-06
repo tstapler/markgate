@@ -5,12 +5,10 @@ from __future__ import annotations
 import pytest
 import typer
 
-from docspan.backends.base import PullResult, PushResult
+from docspan.backends.base import PullResult
 from docspan.cli.main import _resolve_local, _resolve_merged, _resolve_remote
-from docspan.core.orchestrator import record_state, save_base_content
-from docspan.core.paths import ORIG_SUFFIX
+from docspan.core.orchestrator import save_base_content
 from docspan.core.state import MappingState, SyncState, sha256_of_content
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers

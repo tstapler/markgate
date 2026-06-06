@@ -1,11 +1,10 @@
 """Unit tests for DocsStructureParser — pure dict-to-AST logic, no network."""
 
-from docspan.backends.google_docs.docs_structure_parser import (
-    DocsParagraphNode,
-    DocsStructureParser,
-    TextSpan,
-)
 import pytest
+
+from docspan.backends.google_docs.docs_structure_parser import (
+    DocsStructureParser,
+)
 
 
 def _make_para_element(

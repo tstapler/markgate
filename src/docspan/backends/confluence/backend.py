@@ -18,9 +18,8 @@ from docspan.backends.confluence.markdown.parser import MarkdownParser
 from docspan.backends.confluence.models.page import ConfluencePage
 from docspan.backends.confluence.services.confluence.client import ConfluenceClient
 from docspan.backends.confluence.services.confluence.comment_client import ConfluenceCommentClient
-from docspan.core.paths import COMMENTS_SUFFIX
-
 from docspan.config import ConfluenceConfig
+from docspan.core.paths import COMMENTS_SUFFIX
 
 if TYPE_CHECKING:
     from docspan.config import MarkgateConfig

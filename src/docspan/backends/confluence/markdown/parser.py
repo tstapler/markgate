@@ -23,7 +23,6 @@ from docspan.backends.confluence.markdown.ast import (
     MermaidNode,
     NoteNode,
     OrderedListNode,
-    PanelNode,
     ParagraphNode,
     TableNode,
     TaskItemNode,
@@ -520,7 +519,7 @@ class MarkdownParser:
             # Check if this line starts a list item
             list_item_match = re.match(r"^([*\-+])\s+(.*)$", line)
             if list_item_match:
-                bullet_char = list_item_match.group(1)
+                list_item_match.group(1)
                 first_line_content = list_item_match.group(2)
 
                 # Collect all lines that belong to this item (indented continuation)
@@ -581,7 +580,7 @@ class MarkdownParser:
             # Check if this line starts a list item
             list_item_match = re.match(r"^(\d+)\.\s+(.*)$", line)
             if list_item_match:
-                item_number = list_item_match.group(1)
+                list_item_match.group(1)
                 first_line_content = list_item_match.group(2)
 
                 # Collect all lines that belong to this item (indented continuation)

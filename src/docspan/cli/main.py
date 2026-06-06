@@ -358,7 +358,7 @@ def _resolve_local(
         if base_content:
             with open(file, "w", encoding="utf-8") as fh:
                 fh.write(base_content)
-            console.print(f"[yellow]Warning:[/yellow] .orig not found; restored from base content")
+            console.print("[yellow]Warning:[/yellow] .orig not found; restored from base content")
         else:
             err_console.print(f"No .orig file and no base content for '{file}'. Cannot restore.")
             raise typer.Exit(1)

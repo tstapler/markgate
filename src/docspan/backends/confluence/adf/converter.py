@@ -81,7 +81,7 @@ class AdfConverter:
             return nodes
 
         # Find the first H1 heading
-        from docspan.backends.confluence.markdown.ast import HeadingNode, TextNode
+        from docspan.backends.confluence.markdown.ast import HeadingNode
 
         for i, node in enumerate(nodes):
             if isinstance(node, HeadingNode) and node.level == 1:

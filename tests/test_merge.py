@@ -1,6 +1,5 @@
 """Unit tests for three_way_merge — pure function, no I/O."""
 
-import pytest
 
 from docspan.core.merge import MergeResult, three_way_merge
 

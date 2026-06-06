@@ -2,20 +2,16 @@
 
 from __future__ import annotations
 
-import os
-
 import pytest
 import yaml
 
 from docspan.config import (
-    BackendsConfig,
     ConfluenceConfig,
     GoogleDocsConfig,
     Mapping,
     MarkgateConfig,
     load_config,
 )
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Mapping.direction validation

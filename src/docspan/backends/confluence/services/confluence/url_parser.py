@@ -6,7 +6,6 @@ This module provides functions to extract page IDs and space keys from Confluenc
 
 import re
 from typing import Optional, Tuple
-from urllib.parse import urlparse
 
 
 class ConfluenceUrlParser:

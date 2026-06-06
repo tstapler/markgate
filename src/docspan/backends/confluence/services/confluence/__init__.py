@@ -5,23 +5,23 @@ This module provides functionality for interacting with the Confluence API,
 including specialized clients for different Confluence resources.
 """
 
+from docspan.backends.confluence.services.confluence.attachment_client import AttachmentClient
 from docspan.backends.confluence.services.confluence.base_client import (
-    ConfluenceApiError,
     ArchivedPageError,
+    BaseConfluenceClient,
+    ConfluenceApiError,
     PageNotFoundError,
     RestrictedPageError,
-    BaseConfluenceClient
 )
-from docspan.backends.confluence.services.confluence.page_client import PageClient
-from docspan.backends.confluence.services.confluence.attachment_client import AttachmentClient
-from docspan.backends.confluence.services.confluence.label_client import LabelClient
-from docspan.backends.confluence.services.confluence.space_client import SpaceClient
 from docspan.backends.confluence.services.confluence.client import ConfluenceClient
 from docspan.backends.confluence.services.confluence.comment_client import (
-    ConfluenceCommentClient,
     CommentNotFoundError,
+    ConfluenceCommentClient,
     InlineCommentNotSupportedError,
 )
+from docspan.backends.confluence.services.confluence.label_client import LabelClient
+from docspan.backends.confluence.services.confluence.page_client import PageClient
+from docspan.backends.confluence.services.confluence.space_client import SpaceClient
 
 __all__ = [
     "ConfluenceClient",

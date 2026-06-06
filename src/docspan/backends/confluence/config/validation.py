@@ -5,8 +5,7 @@ Validates configuration dictionaries and suggests corrections for typos using Le
 """
 
 import logging
-from typing import Dict, Any, List, Set, Tuple, Optional
-
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 

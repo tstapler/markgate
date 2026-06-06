@@ -11,7 +11,6 @@ from typing import Any, Dict, Optional, Union
 from docspan.backends.confluence.config.models import MarkdownConfluenceConfig
 from docspan.backends.confluence.config.validation import validate_config_dict
 
-
 logger = logging.getLogger(__name__)
 
 

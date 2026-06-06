@@ -7,7 +7,7 @@ Markdown nodes to Atlassian Document Format (ADF) nodes.
 
 import logging
 import re as _re
-from typing import Any, Dict, List, Optional, Type, cast
+from typing import Any, Dict, List
 
 # Matches Jira issue URLs: .../browse/PROJ-123
 _JIRA_ISSUE_URL_RE = _re.compile(
@@ -17,12 +17,7 @@ _JIRA_ISSUE_URL_RE = _re.compile(
 # Matches a bare issue key like "INCDNT-1" or "PROJ-42"
 _JIRA_ISSUE_KEY_RE = _re.compile(r'^[A-Z][A-Z0-9_]+-\d+$', _re.IGNORECASE)
 
-from docspan.backends.confluence.adf.interfaces import (
-    NodeConverter, 
-    NodeRegistry,
-    TypedNodeConverter,
-    AdfDocumentBuilder
-)
+from docspan.backends.confluence.adf.interfaces import AdfDocumentBuilder, TypedNodeConverter
 from docspan.backends.confluence.adf.nodes import AdfBuilder, AdfNode
 from docspan.backends.confluence.adf.visitors import AdfNodeVisitor, NodeVisitorRegistry
 from docspan.backends.confluence.markdown.ast import (
@@ -436,7 +431,7 @@ class LinkNodeConverter(TypedNodeConverter):
         # the issue key, the bare URL, or absent.
         jira_match = _JIRA_ISSUE_URL_RE.match(node.url)
         if jira_match:
-            issue_key = jira_match.group(1).upper()
+            jira_match.group(1).upper()
             text_is_key = bool(_JIRA_ISSUE_KEY_RE.match(text_content))
             text_is_url = (not text_content or text_content == node.url)
             if text_is_key or text_is_url:
@@ -925,7 +920,7 @@ class MermaidNodeConverter(TypedNodeConverter):
     
     def convert_typed(self, node: MermaidNode) -> AdfNode:
         """Convert a mermaid diagram node to ADF."""
-        self.logger.info(f"Processing Mermaid diagram for ADF conversion")
+        self.logger.info("Processing Mermaid diagram for ADF conversion")
         self.logger.debug(f"Mermaid node attributes: {node.attrs}")
         
         # First, check if the node has storage_format_html attribute (highest priority)
@@ -934,7 +929,7 @@ class MermaidNodeConverter(TypedNodeConverter):
             
             # Create a paragraph node that will be replaced with HTML content
             note_paragraph = self.builder.paragraph([
-                self.builder.text(f"")
+                self.builder.text("")
             ])
             
             # Transfer the HTML content to the paragraph node
@@ -951,7 +946,7 @@ class MermaidNodeConverter(TypedNodeConverter):
             
             # Create a paragraph node that will be replaced with HTML content
             note_paragraph = self.builder.paragraph([
-                self.builder.text(f"")
+                self.builder.text("")
             ])
             
             # Store HTML content in the storage_format_html attribute

@@ -3,7 +3,6 @@
 from docspan.backends.google_docs.docs_request_builder import DocsRequestBuilder
 from docspan.backends.google_docs.docs_structure_parser import DocsParagraphNode
 
-
 DOC_END = 100
 
 

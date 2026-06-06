@@ -97,14 +97,18 @@ class ConfluencePage:
                 self._validate_adf(adf_content)
                 data["body"] = {"atlas_doc_format": adf_content}
             except json.JSONDecodeError as e:
-                from docspan.backends.confluence.services.confluence.base_client import ADFConversionError
+                from docspan.backends.confluence.services.confluence.base_client import (
+                    ADFConversionError,
+                )
                 raise ADFConversionError(
                     f"Failed to parse JSON content: {e}",
                     markdown_content=self.content[:200]
                 )
         else:
             # String content is not supported - must be ADF dict
-            from docspan.backends.confluence.services.confluence.base_client import ADFConversionError
+            from docspan.backends.confluence.services.confluence.base_client import (
+                ADFConversionError,
+            )
             raise ADFConversionError(
                 "Content must be ADF dictionary format. String/storage format is not supported.",
                 markdown_content=str(self.content)[:200] if self.content else None
@@ -124,8 +128,7 @@ class ConfluencePage:
             InvalidADFError: If ADF structure is invalid
         """
         from docspan.backends.confluence.services.confluence.base_client import (
-            UnsupportedADFFeatureError,
-            InvalidADFError
+            InvalidADFError,
         )
 
         # Check basic structure
@@ -182,7 +185,9 @@ class ConfluencePage:
         Raises:
             UnsupportedADFFeatureError: If node contains unsupported types
         """
-        from docspan.backends.confluence.services.confluence.base_client import UnsupportedADFFeatureError
+        from docspan.backends.confluence.services.confluence.base_client import (
+            UnsupportedADFFeatureError,
+        )
 
         node_type = node.get("type")
 

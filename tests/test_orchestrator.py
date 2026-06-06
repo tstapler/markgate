@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
-
-import pytest
 
 from docspan.backends.base import Backend, PullResult, PushResult
 from docspan.config import Mapping
@@ -16,7 +13,6 @@ from docspan.core.orchestrator import (
     save_base_content,
 )
 from docspan.core.state import MappingState, SyncState, sha256_of_content
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Test double

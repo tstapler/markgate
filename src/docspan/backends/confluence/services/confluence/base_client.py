@@ -8,10 +8,10 @@ for Confluence API interactions, which specialized clients can extend.
 import abc
 import json
 import logging
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union, Type
+from typing import Any, Dict, List, Optional, Union
 
 import requests
+
 from docspan.backends.confluence.config.models import ConfluenceConfig
 
 

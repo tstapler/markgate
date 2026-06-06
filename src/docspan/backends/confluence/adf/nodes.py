@@ -2,9 +2,9 @@
 Atlassian Document Format node definitions.
 """
 
+import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ to Atlassian Document Format (ADF) nodes.
 """
 
 import logging
-from typing import Dict, List, Optional, Type, cast
+from typing import Dict, List, Optional, cast
 
 from docspan.backends.confluence.adf.interfaces import BaseNodeVisitor, NodeConverter, NodeRegistry
 from docspan.backends.confluence.adf.nodes import AdfBuilder, AdfNode
@@ -15,7 +15,6 @@ from docspan.backends.confluence.markdown.ast import (
     BulletListNode,
     CodeBlockNode,
     HeadingNode,
-    HorizontalRuleNode,
     ImageNode,
     InlineCodeNode,
     LinkNode,
@@ -395,7 +394,7 @@ class MermaidNodeVisitor(BaseNodeVisitor):
         """Convert a mermaid diagram node to ADF."""
         mermaid_node = cast(MermaidNode, node)
         
-        self.logger.info(f"Processing Mermaid diagram for ADF conversion")
+        self.logger.info("Processing Mermaid diagram for ADF conversion")
         self.logger.debug(f"Mermaid node attributes: {mermaid_node.attrs}")
         self.logger.debug(f"Mermaid code type: {mermaid_node.code.strip().split()[0] if mermaid_node.code.strip() else 'empty'}")
         
@@ -424,7 +423,7 @@ class MermaidNodeVisitor(BaseNodeVisitor):
                 
                 # Create a paragraph node that will be replaced with the HTML content
                 note_paragraph = self.builder.paragraph([
-                    self.builder.text(f"")
+                    self.builder.text("")
                 ])
                 
                 # Store HTML content in a special attribute that will be handled during storage format conversion
@@ -465,8 +464,8 @@ class MermaidNodeVisitor(BaseNodeVisitor):
         # Check if the diagram has been rendered as iframe embed
         elif "embed_html" in mermaid_node.attrs:
             # Get the HTML
-            embed_html = mermaid_node.attrs["embed_html"]
-            self.logger.info(f"Found embed HTML for Mermaid diagram")
+            mermaid_node.attrs["embed_html"]
+            self.logger.info("Found embed HTML for Mermaid diagram")
             
             # Instead of trying to embed HTML, use a link to the mermaid live diagram
             live_link = mermaid_node.attrs["live_link"]

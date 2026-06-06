@@ -6,11 +6,12 @@ Handles authentication for two separate Google accounts:
 - Account B: Obsidian vault storage
 """
 
-import os
 import json
 import logging
-from google.oauth2 import service_account
+import os
+
 from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 
 logger = logging.getLogger(__name__)
 
