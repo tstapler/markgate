@@ -155,6 +155,7 @@ def pull(
     state_dir = get_state_dir(config_path)
     state = _load_state(state_path)
 
+    had_error = False
     for mapping in mappings:
         if mapping.direction == "push":
             console.print(f"[dim]Skipping {mapping.local} (push-only)[/dim]")
@@ -185,6 +186,7 @@ def pull(
             else:
                 console.print("   [green]Merged cleanly.[/green]")
         elif outcome.action == "error":
+            had_error = True
             result = outcome.result
             err_console.print(
                 f"✗  {mapping.remote_id} → {mapping.local}: "
@@ -199,6 +201,9 @@ def pull(
                 console.print(f"[{style}]{icon}[/{style}]  {mapping.remote_id} → {mapping.local}")
                 if result.message:
                     console.print(f"   [dim]{result.message}[/dim]")
+
+    if had_error:
+        raise typer.Exit(1)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

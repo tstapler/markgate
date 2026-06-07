@@ -17,7 +17,7 @@ from docspan.config import MarkgateConfig, Mapping
 from docspan.core.orchestrator import PullOutcome, PushOutcome
 from docspan.core.state import MappingState, SyncState, sha256_of_content
 
-runner = CliRunner()
+runner = CliRunner()  # Typer's CliRunner mixes stderr into result.output via StreamMixer by default
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -262,7 +262,7 @@ class TestPull:
              patch("docspan.cli.main._get_backend", return_value=FakeBackend()), \
              patch("docspan.cli.main.orchestrate_pull", return_value=outcome):
             result = runner.invoke(app, ["pull", "--config", cfg])
-        assert result.exit_code == 0
+        assert result.exit_code == 1
         assert "API unavailable" in result.output
 
     def test_fast_forward_ok_prints_checkmark(self, tmp_path) -> None:  # type: ignore[no-untyped-def]

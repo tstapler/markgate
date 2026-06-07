@@ -207,7 +207,7 @@ class ConfluenceBackend(Backend):
             f"  confluence:\n"
             f"    base_url: {base_url}\n"
             f"    username: {username}\n"
-            f"    api_token: {api_token}\n"
+            f"    api_token: <paste your token here>\n"
         )
         print("Done. Test with: docspan status")
 
