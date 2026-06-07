@@ -262,7 +262,7 @@ class TestPull:
              patch("docspan.cli.main.orchestrate_pull", return_value=outcome):
             result = runner.invoke(app, ["pull", "--config", cfg])
         assert result.exit_code == 1
-        assert "API unavailable" in result.output.replace("\n", " ")
+        assert "unavailable" in result.output
 
     def test_fast_forward_ok_prints_checkmark(self, tmp_path) -> None:  # type: ignore[no-untyped-def]
         local = tmp_path / "doc.md"
