@@ -56,6 +56,9 @@ Thumbs.db
 *.log
 logs/
 
+# MkDocs build output
+site/
+
 # Terraform
 .terraform/
 *.tfstate

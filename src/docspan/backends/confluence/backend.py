@@ -48,7 +48,7 @@ class ConfluenceBackend(Backend):
         api_token = self.config.api_token or os.getenv("CONFLUENCE_API_TOKEN")
         if not all([base_url, username, api_token]):
             raise RuntimeError(
-                "Confluence credentials incomplete. Run: markgate auth setup confluence\n"
+                "Confluence credentials incomplete. Run: docspan auth setup confluence\n"
                 "Or set CONFLUENCE_BASE_URL, ATLASSIAN_USER_NAME, CONFLUENCE_API_TOKEN."
             )
         self._internal_cfg = InternalConfluenceConfig(
@@ -209,7 +209,7 @@ class ConfluenceBackend(Backend):
             f"    username: {username}\n"
             f"    api_token: {api_token}\n"
         )
-        print("Done. Test with: markgate status")
+        print("Done. Test with: docspan status")
 
     def validate_config(self) -> None:
         base_url = self.config.base_url or os.getenv("CONFLUENCE_BASE_URL")
@@ -225,5 +225,5 @@ class ConfluenceBackend(Backend):
         if missing:
             raise ValueError(
                 f"Missing Confluence config: {', '.join(missing)}. "
-                "Run: markgate auth setup confluence"
+                "Run: docspan auth setup confluence"
             )

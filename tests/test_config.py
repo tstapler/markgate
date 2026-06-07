@@ -128,6 +128,37 @@ def test_confluence_validate_config_passes_with_full_creds() -> None:
     ConfluenceBackend(cfg).validate_config()  # must not raise
 
 
+@pytest.mark.parametrize("missing_field,expected_fragment", [
+    ("base_url", "base_url / CONFLUENCE_BASE_URL"),
+    ("username", "username / ATLASSIAN_USER_NAME"),
+    ("api_token", "api_token / CONFLUENCE_API_TOKEN"),
+])
+def test_confluence_validate_config_reports_each_missing_field(
+    monkeypatch,  # type: ignore[no-untyped-def]
+    missing_field: str,
+    expected_fragment: str,
+) -> None:
+    monkeypatch.delenv("CONFLUENCE_BASE_URL", raising=False)
+    monkeypatch.delenv("ATLASSIAN_USER_NAME", raising=False)
+    monkeypatch.delenv("CONFLUENCE_API_TOKEN", raising=False)
+
+    all_creds = {"base_url": "https://x.atlassian.net", "username": "user@x.com", "api_token": "tok"}
+    del all_creds[missing_field]
+
+    from docspan.backends.confluence.backend import ConfluenceBackend
+    with pytest.raises(ValueError, match=expected_fragment):
+        ConfluenceBackend(ConfluenceConfig(**all_creds)).validate_config()
+
+
+def test_confluence_validate_config_passes_via_env_vars(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    monkeypatch.setenv("CONFLUENCE_BASE_URL", "https://env.atlassian.net")
+    monkeypatch.setenv("ATLASSIAN_USER_NAME", "env_user")
+    monkeypatch.setenv("CONFLUENCE_API_TOKEN", "env_tok")
+
+    from docspan.backends.confluence.backend import ConfluenceBackend
+    ConfluenceBackend(ConfluenceConfig()).validate_config()  # must not raise
+
+
 def test_google_docs_validate_config_raises_without_credentials(monkeypatch) -> None:  # type: ignore[no-untyped-def]
     monkeypatch.delenv("ACCOUNT_A_CREDENTIALS_PATH", raising=False)
     monkeypatch.delenv("ACCOUNT_A_CREDENTIALS", raising=False)
@@ -142,3 +173,19 @@ def test_google_docs_validate_config_passes_with_credentials_path() -> None:
     from docspan.backends.google_docs.backend import GoogleDocsBackend
     cfg = GoogleDocsConfig(credentials_path="/path/to/creds.json")
     GoogleDocsBackend(cfg).validate_config()  # must not raise
+
+
+def test_google_docs_validate_config_passes_with_env_var_path(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    monkeypatch.setenv("ACCOUNT_A_CREDENTIALS_PATH", "/env/path/to/creds.json")
+    monkeypatch.delenv("ACCOUNT_A_CREDENTIALS", raising=False)
+
+    from docspan.backends.google_docs.backend import GoogleDocsBackend
+    GoogleDocsBackend(GoogleDocsConfig()).validate_config()  # must not raise
+
+
+def test_google_docs_validate_config_passes_with_env_var_json(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    monkeypatch.delenv("ACCOUNT_A_CREDENTIALS_PATH", raising=False)
+    monkeypatch.setenv("ACCOUNT_A_CREDENTIALS", '{"type": "service_account"}')
+
+    from docspan.backends.google_docs.backend import GoogleDocsBackend
+    GoogleDocsBackend(GoogleDocsConfig()).validate_config()  # must not raise
