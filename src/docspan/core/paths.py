@@ -1,4 +1,4 @@
-"""Centralised path constants for markgate's local state files."""
+"""Centralised path constants for docspan's local state files."""
 
 STATE_FILENAME = ".markgate-state.json"
 BASE_STORE_DIR = ".markgate-base"

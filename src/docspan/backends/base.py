@@ -41,13 +41,13 @@ class PullResult:
 
 class Backend(ABC):
     """
-    Base class for all markgate platform backends.
+    Base class for all docspan platform backends.
 
     Implementing a new backend:
       1. Subclass Backend
       2. Set class attribute `name` (e.g. name = "my_backend")
       3. Implement push(), pull(), auth_setup(), and validate_config()
-      4. Register in src/markgate/backends/__init__.py
+      4. Register in src/docspan/backends/__init__.py
     """
 
     name: str  # must be overridden in every concrete subclass

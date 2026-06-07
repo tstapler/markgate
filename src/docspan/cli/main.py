@@ -1,4 +1,4 @@
-"""markgate CLI — push, pull, auth, status, conflicts."""
+"""docspan CLI — push, pull, auth, status, conflicts."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ from docspan.core import (
 from docspan.core.paths import ORIG_SUFFIX
 
 app = typer.Typer(
-    name="markgate",
+    name="docspan",
     help="Push and pull markdown to Google Docs and Confluence.",
     add_completion=False,
     rich_markup_mode="rich",
@@ -155,6 +155,7 @@ def pull(
     state_dir = get_state_dir(config_path)
     state = _load_state(state_path)
 
+    had_error = False
     for mapping in mappings:
         if mapping.direction == "push":
             console.print(f"[dim]Skipping {mapping.local} (push-only)[/dim]")
@@ -173,18 +174,19 @@ def pull(
         elif outcome.action == "local-only":
             console.print(
                 f"[yellow]warning[/yellow]  {mapping.local} has local changes not yet pushed. "
-                "Pull skipped. Push first or use 'markgate conflicts resolve'."
+                "Pull skipped. Push first or use 'docspan conflicts resolve'."
             )
         elif outcome.action == "merged":
             console.print(f"[yellow]merging[/yellow]  {mapping.local}")
             if outcome.has_conflicts:
                 console.print(
                     f"   [yellow]Merge conflicts ({outcome.conflict_count}) written to "
-                    f"{mapping.local}. Resolve with: markgate conflicts resolve {mapping.local}[/yellow]"
+                    f"{mapping.local}. Resolve with: docspan conflicts resolve {mapping.local}[/yellow]"
                 )
             else:
                 console.print("   [green]Merged cleanly.[/green]")
         elif outcome.action == "error":
+            had_error = True
             result = outcome.result
             err_console.print(
                 f"✗  {mapping.remote_id} → {mapping.local}: "
@@ -199,6 +201,9 @@ def pull(
                 console.print(f"[{style}]{icon}[/{style}]  {mapping.remote_id} → {mapping.local}")
                 if result.message:
                     console.print(f"   [dim]{result.message}[/dim]")
+
+    if had_error:
+        raise typer.Exit(1)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -216,7 +221,7 @@ def status(
         console.print("[yellow]No mappings configured.[/yellow] Add entries to markgate.yaml.")
         return
 
-    table = Table(title="markgate mappings")
+    table = Table(title="docspan mappings")
     table.add_column("Local file", style="cyan")
     table.add_column("Backend", style="magenta")
     table.add_column("Remote ID")

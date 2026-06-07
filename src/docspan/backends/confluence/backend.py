@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import getpass
 import logging
 import os
 import pathlib
@@ -48,7 +47,7 @@ class ConfluenceBackend(Backend):
         api_token = self.config.api_token or os.getenv("CONFLUENCE_API_TOKEN")
         if not all([base_url, username, api_token]):
             raise RuntimeError(
-                "Confluence credentials incomplete. Run: markgate auth setup confluence\n"
+                "Confluence credentials incomplete. Run: docspan auth setup confluence\n"
                 "Or set CONFLUENCE_BASE_URL, ATLASSIAN_USER_NAME, CONFLUENCE_API_TOKEN."
             )
         self._internal_cfg = InternalConfluenceConfig(
@@ -200,16 +199,15 @@ class ConfluenceBackend(Backend):
         print("=" * 40)
         base_url = input("Confluence base URL (e.g. https://yourorg.atlassian.net): ").strip()
         username = input("Atlassian username (email): ").strip()
-        api_token = getpass.getpass("API token (from id.atlassian.com/manage-profile/security/api-tokens): ")
         print(
             f"\nAdd to markgate.yaml:\n\n"
             f"backends:\n"
             f"  confluence:\n"
             f"    base_url: {base_url}\n"
             f"    username: {username}\n"
-            f"    api_token: {api_token}\n"
+            f"    api_token: <your-token>  # from id.atlassian.com/manage-profile/security/api-tokens\n"
         )
-        print("Done. Test with: markgate status")
+        print("Done. Test with: docspan status")
 
     def validate_config(self) -> None:
         base_url = self.config.base_url or os.getenv("CONFLUENCE_BASE_URL")
@@ -225,5 +223,5 @@ class ConfluenceBackend(Backend):
         if missing:
             raise ValueError(
                 f"Missing Confluence config: {', '.join(missing)}. "
-                "Run: markgate auth setup confluence"
+                "Run: docspan auth setup confluence"
             )

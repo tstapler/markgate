@@ -1,4 +1,6 @@
-# Google Docs Push — Implementation Plan
+# Google Docs Push — Design Notes
+
+> **Status: Implemented.** Structural-diff push (Option B below) shipped in the initial implementation. This document reflects the original design intent; see `src/docspan/backends/google_docs/` for the actual code.
 
 ## Goal
 
@@ -25,7 +27,7 @@ applies a sequence of atomic requests against the document's internal index posi
 
 ## Content write strategies
 
-### Option A — Delete-all then insert (simplest, chosen for v1)
+### Option A — Delete-all then insert (simplest)
 
 1. `GET` the document to find the body end index.
 2. Send a `batchUpdate` with two requests:
@@ -37,9 +39,7 @@ applies a sequence of atomic requests against the document's internal index posi
 **Cons:** destroys all comments and suggestions on the existing document; resets cursor
 positions for any collaborators currently in the doc.
 
-This is acceptable for v1. A diff-based update (Option B) can be added later.
-
-### Option B — Structural diff update (future)
+### Option B — Structural diff update (implemented)
 
 Compute a diff between the current ADF-like structure and the desired structure, then
 emit only the minimal `batchUpdate` requests to reconcile the delta. Preserves comments
@@ -95,18 +95,22 @@ All requests are accumulated in order and sent in a single `batchUpdate` call.
 
 ## Implementation plan
 
-### Phase 1 — Core push (no images, no tables)
+### Phase 1 — Core push (no images, no tables) ✓ Done
 
-**Files to create/modify:**
+**Files created/modified:**
 
-- `src/markgate/backends/google_docs/docs_request_builder.py` — new  
-  Walks the markdown AST and emits a list of Docs API `Request` dicts.
+- `src/docspan/backends/google_docs/docs_request_builder.py` — structural diff engine  
+  Walks two paragraph ASTs (current vs target) and emits minimal Docs API `Request` dicts.
 
-- `src/markgate/backends/google_docs/client.py` — extend  
-  Add `clear_document(doc_id)` and `batch_update(doc_id, requests)` methods.
+- `src/docspan/backends/google_docs/docs_structure_parser.py` — Docs JSON → AST  
+  Parses the `documents.get` response into a list of `DocsParagraphNode`.
 
-- `src/markgate/backends/google_docs/backend.py` — implement `push()`  
-  Wire parser → builder → client.
+- `src/docspan/backends/google_docs/markdown_to_paragraph_parser.py` — Markdown → AST  
+  Parses local markdown into the same `DocsParagraphNode` format via mistune.
+
+- `src/docspan/backends/google_docs/client.py` — extended with `get_document()` and `batch_update()`
+
+- `src/docspan/backends/google_docs/backend.py` — `push()` wired: markdown → target AST → Docs JSON → current AST → diff → batchUpdate
 
 **Acceptance criteria:**
 - `markgate push docs/test.md` with a known Google Doc ID updates the document.
@@ -142,20 +146,20 @@ and emitting minimal update requests. Useful for preserving comments.
 
 ## OAuth scope requirements
 
-The existing pull path uses:
-- `https://www.googleapis.com/auth/drive.readonly`
-- `https://www.googleapis.com/auth/documents.readonly`
-
 Push requires:
 - `https://www.googleapis.com/auth/documents` (read/write)
-- `https://www.googleapis.com/auth/drive` (read/write, for Phase 2 image upload)
+- `https://www.googleapis.com/auth/drive.readonly` (for file export fallback)
 
-The `auth_setup` wizard in `GoogleDocsBackend` must request the broader scopes when
-push is configured. Pull-only mappings can keep the readonly scopes.
+Pull-only can use readonly scopes, but the implementation defaults to push scopes for
+simplicity. `src/docspan/backends/google_docs/auth.py` defines:
 
-Update `src/markgate/backends/google_docs/auth.py`:
-- Add `PUSH_SCOPES` constant
-- `auth_setup(direction)` → request readonly or read/write scopes based on direction
+```python
+PULL_SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
+PUSH_SCOPES = ["https://www.googleapis.com/auth/documents", "https://www.googleapis.com/auth/drive.readonly"]
+DEFAULT_SCOPES = PUSH_SCOPES  # read-write by default
+```
+
+`auth_setup()` does not accept a `direction` parameter — it always uses `DEFAULT_SCOPES`.
 
 ---
 

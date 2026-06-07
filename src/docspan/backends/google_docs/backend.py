@@ -42,7 +42,7 @@ class GoogleDocsBackend(Backend):
                 raise RuntimeError(
                     "Google Docs credentials not found. "
                     "Set credentials_path in markgate.yaml or ACCOUNT_A_CREDENTIALS_PATH env var. "
-                    "Run: markgate auth setup google_docs"
+                    "Run: docspan auth setup google_docs"
                 )
             self._client = GoogleDocsClient(dual.get_account_a_credentials())
 
@@ -109,7 +109,7 @@ class GoogleDocsBackend(Backend):
 
         print("\nGoogle Docs Auth Setup")
         print("=" * 40)
-        print("Markgate uses Google service account credentials for Google Docs access.")
+        print("docspan uses Google service account credentials for Google Docs access.")
         print("\nSetup steps:")
         print("  1. Create a service account at:")
         print("     https://console.cloud.google.com/iam-admin/serviceaccounts")
@@ -136,5 +136,5 @@ class GoogleDocsBackend(Backend):
             raise ValueError(
                 "Missing Google Docs credentials. "
                 "Set credentials_path in markgate.yaml or ACCOUNT_A_CREDENTIALS_PATH env var. "
-                "Run: markgate auth setup google_docs"
+                "Run: docspan auth setup google_docs"
             )
